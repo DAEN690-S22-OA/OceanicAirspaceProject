@@ -46,7 +46,7 @@ Or they can be uploaded to Tableau to create animated visualizations and dashboa
 The code is written in Python. The following libraries are used in the code: pandas, geopandas, geopy, shapely, dask, pandasql, numpy, math, datetime, sagemaker, boto, os
 
 ## Running the script
-The script is optimized to work on Amazon Web Service's (AWS) Sagemaker. Clone the repository, get the script into Sagemaker, and run the code. 
+The script is optimized to work on Amazon Web Service's (AWS) Sagemaker as a Jupyter Notebook (Detect_Potential_Loss_Separation.ipynb). Clone the repository, get the script into Sagemaker, and run the code. 
 
 NOTE: 
   - A prerequiste would be having the raw data already setup in an S3 bucket
@@ -55,7 +55,14 @@ NOTE:
 At its core it is a Jupyternotebook that can be outside of Sagemaker in a standalone Jypyternotebook or as a standlone Python script but modifications would need to be done to get the data input and to store the data output. 
 
 ## Build Status
-The project code is currently conplete. No further updates or maintenance will be completed on this code. 
+The project code is currently complete. No further updates or maintenance will be done on this code. 
+
+## Folder and File explanation
+1. Development Process (folder):
+2. Project Documentation (folder):
+4. Detect_Potential_Loss_Separation.ipynb (file): Final version of the code as a Jupyter Notebook
+5. Detect_Potential_Loss_Separation.ipynb (file): Final version of the code as a Python Script
+3. README.md (file): 
 
 ## Authors 
 Developers: Lorenzo Flores, Chen Yuan Lee, Erick Orellana, Pakawan Thongtang, Han Zhang
