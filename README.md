@@ -58,8 +58,8 @@ At its core it is a Jupyternotebook that can be outside of Sagemaker in a standa
 The project code is currently complete. No further updates or maintenance will be done on this code. 
 
 ## Folder and File explanation
-1. Development Process (folder):
-2. Project Documentation (folder):
+1. Development Process (folder): Folder containing older versions of the code at various stages that served different purposes throughout the development process. They are not needed to utilize the final solutions.
+2. Project Documentation (folder): Folder with an explanation of each function and a map of flow of the algorithm. 
 4. Detect_Potential_Loss_Separation.ipynb (file): Final version of the code as a Jupyter Notebook
 5. Detect_Potential_Loss_Separation.ipynb (file): Final version of the code as a Python Script
 3. README.md (file): 
