@@ -54,6 +54,12 @@ NOTE:
 
 At its core it is a Jupyternotebook that can be outside of Sagemaker in a standalone Jypyternotebook or as a standlone Python script but modifications would need to be done to get the data input and to store the data output. 
 
+## Visualizations
+The main focus for visualizations in this project revolved around the usage of Tableau. A template of a Tableau dashboard has been provided labled "OceanicAirspace_Visualization.twbx". In the "Project Documentation" folder there are instructions on updating the data being visualized on the dashboard.
+
+NOTE:
+    - Prerequisite would be having already ran the "Detect_Potential_Loss_Separation.ipynb" scripts to generate the "visualization400Report" and "Visualization1000Report" reports which are the inputs for the dashboards. 
+
 ## Build Status
 The project code is currently complete. No further updates or maintenance will be done on this code. 
 
@@ -62,7 +68,8 @@ The project code is currently complete. No further updates or maintenance will b
 2. Project Documentation (folder): Folder with an explanation of each function and a map of flow of the algorithm. 
 4. Detect_Potential_Loss_Separation.ipynb (file): Final version of the code as a Jupyter Notebook
 5. Detect_Potential_Loss_Separation.ipynb (file): Final version of the code as a Python Script
-3. README.md (file): 
+6. OceanicAirspace_Visualization.twbx (file): Tableau workbook containing the template for the dashboard. 
+7. README.md (file): 
 
 ## Authors 
 Developers: Lorenzo Flores, Chen Yuan Lee, Erick Orellana, Pakawan Thongtang, Han Zhang
