@@ -1,16 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
 
 #Install libraries
 get_ipython().system('pip install geopy')
 get_ipython().system('pip install shapely ')
 get_ipython().system('pip install pandasql')
-
-
-# In[ ]:
 
 
 #Import Libraries
@@ -27,9 +22,6 @@ from datetime import timedelta
 import sagemaker, boto3, os
 
 
-# In[ ]:
-
-
 #Setup the path for the file containing ther raw data
 bucket = 'daen-690-pacific-deviations/raw-data' #Bucket name
 data_key = 'TOMRDate=2021-12-28.csv' #Name of the CSV file 
@@ -38,8 +30,6 @@ data_location = 's3://{}/{}'.format(bucket, data_key)
 #Import all of the raw data 
 rawData_df = dd.read_csv(data_location, assume_missing=True)
 
-
-# In[ ]:
 
 
 #Function to filter out the needed attribues, rename, and change flight level scale
@@ -69,8 +59,6 @@ def filterAttributes():
     return airspaceData
 
 
-# In[ ]:
-
 
 #Function to format date and time  
 def timeFormatting(allAircraftData):
@@ -96,8 +84,6 @@ def timeFormatting(allAircraftData):
     return allAircraftData
 
 
-# In[ ]:
-
 
 #Function to filter for only those flights at or above flight level 240
 def dataFiltering(): 
@@ -111,8 +97,6 @@ def dataFiltering():
     #Keep only records for the first 5 seconds to speed up processing time 
     airspaceData = airspaceData[(airspaceData['Second'] < 5)]
 
-
-# In[ ]:
 
 
 #Function to filter out anything in the Hawaii airspace
@@ -167,8 +151,6 @@ def removeHISpace():
     airspaceData = airspaceData.drop(columns=['nearHawaii'])
 
 
-# In[ ]:
-
 
 # Function to remove flights that appear in the record only one time
 def removeSingleoccurrence():
@@ -186,8 +168,6 @@ def removeSingleoccurrence():
         airspaceData = airspaceData[airspaceData.TargetID.str.contains(removeID) == False].reset_index(drop=True)
         location = location + 1
 
-
-# In[ ]:
 
 
 # Function to set the direction of aircraft
@@ -207,8 +187,6 @@ def aircraftDirection():
     airspaceData['Direction'] = np.select(conditionlist, choicelist)
 
 
-# In[ ]:
-
 
 # Function to query Hour and Minute from 'airspaceData' table
 def minuteFilter(HourCounter,MinuteCounter):
@@ -223,9 +201,6 @@ def minuteFilter(HourCounter,MinuteCounter):
     del recordsInMinute['min(Second)']
 
     return (recordsInMinute.sort_values('Longitude').reset_index(drop=True))
-
-
-# In[ ]:
 
 
 # Function for caluculating distance using 'Haversine formula'
@@ -252,8 +227,6 @@ def distance_d(point0,pointX):
     return(Q * R_nm)
 
 
-# In[ ]:
-
 
 # Function to set up boundary at 25 nm by longitude 
 def limit_lon(point0):
@@ -267,8 +240,6 @@ def limit_lon(point0):
     # return Longitude of pointlimit
     return pointlimit[1]
 
-
-# In[ ]:
 
 
 # Function to select, merge and add the values from analyzing Longitude and Latitude
@@ -288,8 +259,6 @@ def newDF(OrderDF,x,y,d):
     OrderResult['Distance'] = d
     return OrderResult
 
-
-# In[ ]:
 
 
 # Calculate the distance of the points closest to each other by longitidue and latitude
@@ -324,9 +293,6 @@ def proximityCalc(LongitudeOrderDF):
     return (Resultsdf)
 
 
-# In[ ]:
-
-
 # Function for calculating height differences
 def distanceCalc(resultsDF):
     
@@ -359,7 +325,6 @@ def distanceCalc(resultsDF):
     return (resultsDF)
 
 
-# In[ ]:
 
 
 # Function for removing duplicate pairs of aircrafts regardless of order
@@ -382,8 +347,6 @@ def removeProximityDups(proximityReport):
 
     return proximityReport
 
-
-# In[ ]:
 
 
 # Function to loop through every Hour and Minute, and call function to claculate proximity and hight difference
@@ -414,7 +377,6 @@ def getProximityReport():
     return proximityReport
 
 
-# In[ ]:
 
 
 # Function to get only results where potentialLoss at 400ft is True
@@ -434,7 +396,6 @@ def get400candidate(proximityReport):
     return LossCandidates400
 
 
-# In[ ]:
 
 
 # Function to get only results where potentialLoss at 1000ft is True
@@ -454,7 +415,6 @@ def get1000candidate(proximityReport):
     return LossCandidates1000
 
 
-# In[ ]:
 
 
 # Function to get the data for the flight at +/- 5 minutes from when the loss of separation was flagged
@@ -483,7 +443,6 @@ def recordsTable(instancesAtLevel, x):
     return flightInformation.sort_values(by=['SeparationEntry','DateTime', 'TargetID'])  
 
 
-# In[ ]:
 
 
 # Function to fill missing second with linear interpolation 
@@ -510,7 +469,6 @@ def fillSecond(data_x,data_y):
     return y_transformed
 
 
-# In[ ]:
 
 
 # Function to put data_x and data_y on the same time scale
@@ -538,7 +496,6 @@ def transformTable(flightData):
     return analyzedTable.reset_index(drop=True)
 
 
-# In[ ]:
 
 
 # Function to calculate distance using 'Haversine formula'
@@ -552,7 +509,6 @@ def haversineAnalysis(lat1, lon1, lat2, lon2, to_radians=True, earth_radius=6371
     return earth_radius * 2 * np.arcsin(np.sqrt(a))  * 0.539956803 
 
 
-# In[ ]:
 
 
 # Function to calculate and append 'LateralDistance' column
@@ -564,7 +520,6 @@ def getLateralDist(analyzedTable):
     return analyzedTable
 
 
-# In[ ]:
 
 
 # Function to calculate and append the Flight Level differnece column 
@@ -581,8 +536,6 @@ def flightlevelCalc(analyzedTable):
 
     return analyzedTable
 
-
-# In[ ]:
 
 
 # Function to identify direction of aircraft
@@ -614,8 +567,6 @@ def getDirection(analyzedTable):
     return analyzedTable
 
 
-# In[ ]:
-
 
 # Function to get separation report contains information at loss of separation and 5 minutes before and after
 def getSeparationReports(instancesAtLevel):
@@ -640,7 +591,6 @@ def getSeparationReports(instancesAtLevel):
     return separationReport
 
 
-# In[ ]:
 
 
 # Function to get information of only TargetID x
@@ -664,7 +614,6 @@ def flightXInfo(separationData):
     return flightX
 
 
-# In[ ]:
 
 
 # Function to get information of only TargetID y
@@ -688,7 +637,6 @@ def flightYInfo(separationData):
     return flightY
 
 
-# In[ ]:
 
 
 # Function to create table for visualization
@@ -714,7 +662,6 @@ def getVisTable(Resulttable):
     return tableToVisualize
 
 
-# In[ ]:
 
 
 #Get the report at the 1000 level
@@ -737,7 +684,6 @@ def getSeparation1000Report(proximityReport):
     return flSeparation1000Report.reset_index(drop=True)
 
 
-# In[ ]:
 
 
 #Get the visualization data at the 1000 level
@@ -764,8 +710,6 @@ def visualization1000(report1000):
     return viz1000Data
 
 
-# In[ ]:
-
 
 #Get the report at the 400 level
 def getSeparation400Report(proximityReport):
@@ -788,7 +732,6 @@ def getSeparation400Report(proximityReport):
     return flSeparation400Report.reset_index(drop=True)
 
 
-# In[ ]:
 
 
 #Get the visualization data at the 400 level
@@ -815,7 +758,6 @@ def visualization400(report400):
     return viz400Data
 
 
-# In[ ]:
 
 
 # Function to export all report files into S3 bucket
@@ -848,7 +790,6 @@ def exportFiles(proximityReport, separation400Report, visualization400Report, se
         os.path.join(prefix, 'data/visualization1000Report.csv')).upload_file('visualization1000Report.csv')
 
 
-# In[ ]:
 
 
 # Function to call data cleaning steps
@@ -861,7 +802,6 @@ def cleanAllAircraftData():
     
 
 
-# In[ ]:
 
 
 # Function to call data cleaning steps for analysis
@@ -872,8 +812,6 @@ def cleanAirspaceData():
     airspaceData = removeSingleoccurrence()
     airspaceData = aircraftDirection()
 
-
-# In[ ]:
 
 
 airspaceData = pd.DataFrame() #Store filtered data
